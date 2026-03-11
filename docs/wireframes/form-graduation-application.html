@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ xét tốt nghiệp - IUH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Be Vietnam Pro', 'sans-serif'] },
+          colors: {
+            primary: { 100: '#E6F0FF', 500: '#0066CC', 700: '#003399', 900: '#002266' },
+            accent: { 100: '#FFF5E0', 500: '#FFB81C' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .upload-zone { transition: border-color 200ms ease, background-color 200ms ease; }
+    .upload-zone:hover { border-color: #0066CC; background-color: #E6F0FF; }
+    .conditional-section { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 400ms ease, opacity 300ms ease; }
+    .conditional-section.active { max-height: 500px; opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-br from-primary-700 to-primary-500 text-white">
+    <div class="max-w-3xl mx-auto px-4 py-6 md:py-8">
+      <a href="landing-page.html" class="inline-flex items-center text-sm text-white/80 hover:text-white mb-3 focus:outline-none focus:ring-2 focus:ring-white/50 rounded">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Quay lại
+      </a>
+      <h1 class="text-xl md:text-2xl font-bold">Hồ sơ xét tốt nghiệp</h1>
+      <p class="text-sm text-white/80 mt-1">Khoa Thương Mại - Du Lịch</p>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 -mt-4 pb-12">
+    <div class="max-w-2xl mx-auto space-y-6">
+
+      <!-- ANNOTATION: Download section — Provides template files for students to download
+           before filling and uploading. Card with download icon links. -->
+      <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 md:p-8">
+        <h2 class="text-base font-semibold text-gray-900 mb-4">Tải biểu mẫu</h2>
+        <div class="space-y-3">
+          <a href="#" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-primary-500 hover:bg-primary-100/30 transition-colors group">
+            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Đơn xét tốt nghiệp (Mẫu 1)</p>
+              <p class="text-xs text-gray-400">Word (.docx)</p>
+            </div>
+          </a>
+          <a href="#" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:border-primary-500 hover:bg-primary-100/30 transition-colors group">
+            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Đơn trình bày lý do quá hạn (Mẫu 2)</p>
+              <p class="text-xs text-gray-400">Word (.docx)</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ANNOTATION: Main upload form — Multiple file uploads grouped logically.
+           Conditional section for "quá thời hạn" students uses JS toggle.
+           Each upload field shows accepted formats. -->
+      <form id="gradForm" class="bg-white rounded-xl shadow-md border border-gray-100 p-6 md:p-8 space-y-5">
+
+        <!-- ANNOTATION: Conditional toggle — Checkbox reveals extra fields for overdue students.
+             Uses CSS max-height transition for smooth reveal. -->
+        <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="overdueToggle" class="w-5 h-5 mt-0.5 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
+                   onchange="toggleOverdue()">
+            <div>
+              <span class="text-sm font-medium text-amber-800">Sinh viên quá thời hạn đào tạo</span>
+              <p class="text-xs text-amber-600 mt-0.5">Chọn nếu bạn là sinh viên quá thời hạn đào tạo theo quy định</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Required uploads -->
+        <fieldset>
+          <legend class="text-base font-semibold text-gray-900 mb-4">Hồ sơ bắt buộc</legend>
+          <div class="space-y-4">
+
+            <!-- Đơn xét TN -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Đơn xét tốt nghiệp <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">Word (.doc, .docx)</p>
+                <input type="file" name="applicationForm" accept=".doc,.docx" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- Bản sao khai sinh -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Bản sao khai sinh <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                <input type="file" name="birthCert" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- CC Ngoại ngữ -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Chứng chỉ Ngoại ngữ <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                <input type="file" name="langCert" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- CC Tin học -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Chứng chỉ Tin học <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                <input type="file" name="itCert" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- Biên nhận CC Tin học -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Biên nhận chứng chỉ Tin học <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                <input type="file" name="itReceipt" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- Biên nhận CC Ngoại ngữ -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Biên nhận chứng chỉ Ngoại ngữ <span class="text-red-500">*</span></label>
+              <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                   onclick="this.querySelector('input').click()">
+                <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                <input type="file" name="langReceipt" accept=".pdf,.jpg,.jpeg,.png" class="hidden" required onchange="showName(this)">
+                <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+              </div>
+            </div>
+
+          </div>
+        </fieldset>
+
+        <!-- ANNOTATION: Conditional section — Only visible when "quá thời hạn" is checked.
+             Animated reveal using max-height + opacity transition. -->
+        <div id="overdueSection" class="conditional-section">
+          <hr class="border-gray-100 mb-5">
+          <fieldset>
+            <legend class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+              Hồ sơ bổ sung (Quá thời hạn)
+            </legend>
+            <div class="space-y-4">
+
+              <!-- Bảng điểm -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Bảng điểm <span class="text-red-500">*</span></label>
+                <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                     onclick="this.querySelector('input').click()">
+                  <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                  <p class="text-xs text-gray-400 mt-0.5">PDF, JPG, PNG</p>
+                  <input type="file" name="transcript" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="showName(this)">
+                  <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+                </div>
+              </div>
+
+              <!-- Đơn trình bày lý do -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Đơn trình bày lý do <span class="text-red-500">*</span></label>
+                <div class="upload-zone border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer"
+                     onclick="this.querySelector('input').click()">
+                  <p class="text-sm text-gray-500">Nhấp để chọn file</p>
+                  <p class="text-xs text-gray-400 mt-0.5">Word (.doc, .docx)</p>
+                  <input type="file" name="reasonLetter" accept=".doc,.docx" class="hidden" onchange="showName(this)">
+                  <p class="file-name text-sm text-primary-700 font-medium mt-1 hidden"></p>
+                </div>
+              </div>
+
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-2">
+          <button type="submit"
+            class="w-full md:w-auto md:ml-auto md:block h-11 px-8 bg-primary-700 text-white font-medium text-sm rounded-lg hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors">
+            Nộp hồ sơ
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Success message -->
+      <div id="successMsg" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+        <svg class="w-12 h-12 mx-auto text-green-500 mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3 class="text-lg font-semibold text-green-800">Nộp hồ sơ thành công!</h3>
+        <p class="text-sm text-green-600 mt-1">Hồ sơ của bạn đã được ghi nhận. Vui lòng kiểm tra email để theo dõi trạng thái.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-6 text-center">
+    <p class="text-xs text-gray-400">&copy; 2026 Khoa Thương Mại - Du Lịch, Trường Đại học Công nghiệp TP.HCM</p>
+  </footer>
+
+  <script>
+    function showName(input) {
+      const el = input.parentElement.querySelector('.file-name');
+      if (input.files.length > 0) {
+        el.textContent = input.files[0].name;
+        el.classList.remove('hidden');
+      }
+    }
+    function toggleOverdue() {
+      const section = document.getElementById('overdueSection');
+      const checked = document.getElementById('overdueToggle').checked;
+      if (checked) { section.classList.add('active'); } else { section.classList.remove('active'); }
+    }
+    document.getElementById('gradForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      this.closest('.max-w-2xl').querySelector('.bg-white.rounded-xl.shadow-md.border').classList.add('hidden');
+      this.classList.add('hidden');
+      document.getElementById('successMsg').classList.remove('hidden');
+    });
+  </script>
+
+</body>
+</html>

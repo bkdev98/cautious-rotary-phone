@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IUH - Hệ thống đăng ký tốt nghiệp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Be Vietnam Pro', 'sans-serif'] },
+          colors: {
+            primary: { 100: '#E6F0FF', 500: '#0066CC', 700: '#003399', 900: '#002266' },
+            accent: { 100: '#FFF5E0', 500: '#FFB81C' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* ANNOTATION: Card hover micro-interaction — translateY + shadow for depth */
+    .card-hover { transition: transform 200ms ease, box-shadow 200ms ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,51,153,0.12); }
+    @media (prefers-reduced-motion: reduce) { .card-hover { transition: none; } .card-hover:hover { transform: none; } }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+  <!-- ANNOTATION: Header — Blue gradient with university branding.
+       Logo placeholder uses text fallback. Replace with actual IUH logo <img>. -->
+  <header class="bg-gradient-to-br from-primary-700 to-primary-500 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-10 md:py-14 text-center">
+      <!-- Logo placeholder -->
+      <div class="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
+        <span class="text-3xl font-bold">IUH</span>
+      </div>
+      <h1 class="text-xl md:text-2xl font-bold leading-tight">
+        TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP<br>THÀNH PHỐ HỒ CHÍ MINH
+      </h1>
+      <p class="mt-2 text-sm md:text-base font-medium text-white/90">
+        KHOA THƯƠNG MẠI - DU LỊCH
+      </p>
+      <div class="mt-3 w-12 h-0.5 bg-accent-500 mx-auto rounded-full"></div>
+    </div>
+  </header>
+
+  <!-- ANNOTATION: Main content — Two action cards in a responsive grid.
+       Cards are equal-width on desktop, stacked on mobile.
+       Each card has icon, title, description, and CTA button. -->
+  <main class="flex-1 flex items-start justify-center px-4 -mt-6 md:-mt-8 pb-12">
+    <div class="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Card 1: Certificate Registration -->
+      <a href="form-certificate-registration.html" class="card-hover block bg-white rounded-xl shadow-md p-6 md:p-8 text-center border border-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+        <!-- Icon -->
+        <div class="w-14 h-14 mx-auto mb-4 bg-primary-100 rounded-lg flex items-center justify-center">
+          <svg class="w-7 h-7 text-primary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">Đăng ký nhận bằng tốt nghiệp</h2>
+        <p class="text-sm text-gray-500 mb-5 leading-relaxed">
+          Đăng ký thời gian và buổi nhận bằng tốt nghiệp tại trường.
+        </p>
+        <span class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-primary-700 text-white text-sm font-medium rounded-lg hover:bg-primary-500 transition-colors">
+          Đăng ký ngay
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- Card 2: Graduation Application -->
+      <a href="form-graduation-application.html" class="card-hover block bg-white rounded-xl shadow-md p-6 md:p-8 text-center border border-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+        <!-- Icon -->
+        <div class="w-14 h-14 mx-auto mb-4 bg-accent-100 rounded-lg flex items-center justify-center">
+          <svg class="w-7 h-7 text-accent-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">Hồ sơ xét tốt nghiệp</h2>
+        <p class="text-sm text-gray-500 mb-5 leading-relaxed">
+          Nộp hồ sơ xét tốt nghiệp và các giấy tờ liên quan.
+        </p>
+        <span class="inline-flex items-center justify-center w-full py-2.5 px-4 bg-primary-700 text-white text-sm font-medium rounded-lg hover:bg-primary-500 transition-colors">
+          Nộp hồ sơ
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- ANNOTATION: Footer — Minimal, institutional. Shows faculty contact info. -->
+  <footer class="bg-white border-t border-gray-200 py-6 text-center">
+    <p class="text-xs text-gray-400">
+      &copy; 2026 Khoa Thương Mại - Du Lịch, Trường Đại học Công nghiệp TP.HCM
+    </p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị - IUH Graduation Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Be Vietnam Pro', 'sans-serif'] },
+          colors: {
+            primary: { 100: '#E6F0FF', 500: '#0066CC', 700: '#003399', 900: '#002266' },
+            accent: { 100: '#FFF5E0', 500: '#FFB81C' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .tab-active { color: #003399; border-bottom-color: #003399; }
+    .tab-inactive { color: #9CA3AF; border-bottom-color: transparent; }
+    .tab-inactive:hover { color: #333; }
+    /* ANNOTATION: Row hover for clickability affordance */
+    .row-hover { transition: background-color 150ms ease; }
+    .row-hover:hover { background-color: #F9FAFB; cursor: pointer; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+  <!-- ANNOTATION: Top navbar — fixed, compact. Logo left, user menu right.
+       Uses white bg with bottom border for clean separation. -->
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-primary-700 rounded-full flex items-center justify-center">
+          <span class="text-xs font-bold text-white">IUH</span>
+        </div>
+        <span class="text-sm font-semibold text-gray-900 hidden sm:block">Quản trị tốt nghiệp</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-600 hidden md:block">admin@iuh.edu.vn</span>
+        <button onclick="window.location.href='admin-login.html'" class="text-sm text-gray-400 hover:text-red-500 transition-colors">Đăng xuất</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+
+    <!-- ANNOTATION: Stats cards — Quick overview of submission counts.
+         3-column grid on desktop, stacked on mobile. -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+        <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Tổng đăng ký</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">156</p>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+        <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Chờ duyệt</p>
+        <p class="text-2xl font-bold text-amber-500 mt-1">23</p>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+        <p class="text-xs font-medium text-gray-400 uppercase tracking-wide">Đã duyệt</p>
+        <p class="text-2xl font-bold text-green-600 mt-1">128</p>
+      </div>
+    </div>
+
+    <!-- ANNOTATION: Submissions card with tabs — Two tabs for different form types.
+         Tab switching handled by JS. Table is responsive with horizontal scroll on mobile. -->
+    <div class="bg-white rounded-xl shadow-md border border-gray-100">
+
+      <!-- Tabs -->
+      <div class="border-b border-gray-100 px-4 md:px-6 flex gap-6">
+        <button onclick="switchTab('cert')" id="tabCert"
+          class="tab-active py-3 text-sm font-medium border-b-2 transition-colors">
+          Đăng ký nhận bằng
+        </button>
+        <button onclick="switchTab('grad')" id="tabGrad"
+          class="tab-inactive py-3 text-sm font-medium border-b-2 transition-colors">
+          Hồ sơ xét TN
+        </button>
+      </div>
+
+      <!-- ANNOTATION: Table — Responsive via horizontal scroll.
+           Rows are clickable to show detail view.
+           Status badges use color-coded pill design.
+           Mobile: card layout would be better in production. -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm" id="tableCert">
+          <thead>
+            <tr class="border-b border-gray-100">
+              <th class="text-left px-4 md:px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Họ tên</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">MSSV</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide hidden md:table-cell">Lớp</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide hidden lg:table-cell">Đợt TN</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Trạng thái</th>
+              <th class="text-right px-4 md:px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Ngày nộp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample rows -->
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('cert')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Nguyễn Văn An</td>
+              <td class="px-4 py-3 text-gray-600">21004561</td>
+              <td class="px-4 py-3 text-gray-600 hidden md:table-cell">DHTM17A</td>
+              <td class="px-4 py-3 text-gray-600 hidden lg:table-cell">Đợt 1 - T3/2026</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Chờ duyệt</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">10/03/2026</td>
+            </tr>
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('cert')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Trần Thị Bình</td>
+              <td class="px-4 py-3 text-gray-600">21003892</td>
+              <td class="px-4 py-3 text-gray-600 hidden md:table-cell">DHTM17B</td>
+              <td class="px-4 py-3 text-gray-600 hidden lg:table-cell">Đợt 1 - T3/2026</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">Đã duyệt</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">09/03/2026</td>
+            </tr>
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('cert')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Lê Hoàng Cường</td>
+              <td class="px-4 py-3 text-gray-600">21007234</td>
+              <td class="px-4 py-3 text-gray-600 hidden md:table-cell">DHTM17A</td>
+              <td class="px-4 py-3 text-gray-600 hidden lg:table-cell">Đợt 1 - T3/2026</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">Từ chối</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">08/03/2026</td>
+            </tr>
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('cert')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Phạm Minh Đức</td>
+              <td class="px-4 py-3 text-gray-600">21005678</td>
+              <td class="px-4 py-3 text-gray-600 hidden md:table-cell">DHTM17C</td>
+              <td class="px-4 py-3 text-gray-600 hidden lg:table-cell">Đợt 1 - T3/2026</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Chờ duyệt</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">07/03/2026</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Graduation application tab (hidden by default) -->
+        <table class="w-full text-sm hidden" id="tableGrad">
+          <thead>
+            <tr class="border-b border-gray-100">
+              <th class="text-left px-4 md:px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Họ tên</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">MSSV</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide hidden md:table-cell">Quá hạn</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide hidden lg:table-cell">Số file</th>
+              <th class="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Trạng thái</th>
+              <th class="text-right px-4 md:px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wide">Ngày nộp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('grad')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Võ Thị Hoa</td>
+              <td class="px-4 py-3 text-gray-600">21006543</td>
+              <td class="px-4 py-3 hidden md:table-cell"><span class="text-xs text-gray-400">Không</span></td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">6 file</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Chờ duyệt</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">11/03/2026</td>
+            </tr>
+            <tr class="border-b border-gray-50 row-hover" onclick="showDetail('grad')">
+              <td class="px-4 md:px-6 py-3 font-medium text-gray-900">Đặng Quốc Khánh</td>
+              <td class="px-4 py-3 text-gray-600">20001234</td>
+              <td class="px-4 py-3 hidden md:table-cell"><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700">Có</span></td>
+              <td class="px-4 py-3 hidden lg:table-cell text-gray-600">8 file</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">Đã duyệt</span>
+              </td>
+              <td class="px-4 md:px-6 py-3 text-gray-400 text-right">10/03/2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ANNOTATION: Detail panel — Slides in as overlay/modal when a row is clicked.
+         Shows all submitted info, files list, and approve/reject actions.
+         On mobile: full-screen. On desktop: right panel or modal. -->
+    <div id="detailPanel" class="hidden fixed inset-0 z-50 bg-black/30" onclick="closeDetail(event)">
+      <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-xl overflow-y-auto" onclick="event.stopPropagation()">
+
+        <!-- Detail header -->
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+          <h2 class="text-base font-semibold text-gray-900">Chi tiết đăng ký</h2>
+          <button onclick="closeDetail()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors" aria-label="Đóng">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="p-6 space-y-6">
+
+          <!-- Status badge -->
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">Chờ duyệt</span>
+            <span class="text-xs text-gray-400">Nộp lúc 10/03/2026 14:32</span>
+          </div>
+
+          <!-- Student info -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">Thông tin sinh viên</h3>
+            <dl class="space-y-2">
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Họ tên</dt>
+                <dd class="text-sm font-medium text-gray-900">Nguyễn Văn An</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">MSSV</dt>
+                <dd class="text-sm font-medium text-gray-900">21004561</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Lớp</dt>
+                <dd class="text-sm font-medium text-gray-900">DHTM17A</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Điện thoại</dt>
+                <dd class="text-sm font-medium text-gray-900">0901234567</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Email</dt>
+                <dd class="text-sm font-medium text-gray-900">an.nguyen@iuh.edu.vn</dd>
+              </div>
+            </dl>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- Registration details -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">Thông tin đăng ký</h3>
+            <dl class="space-y-2">
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Đợt TN</dt>
+                <dd class="text-sm font-medium text-gray-900">Đợt 1 - Tháng 3/2026</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Ngày nhận</dt>
+                <dd class="text-sm font-medium text-gray-900">25/03/2026</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Buổi</dt>
+                <dd class="text-sm font-medium text-gray-900">Sáng (7h00 - 11h30)</dd>
+              </div>
+            </dl>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- ANNOTATION: Attached files — Clickable links to view/download uploaded files. -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">File đính kèm</h3>
+            <div class="space-y-2">
+              <a href="#" class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 text-primary-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-medium text-gray-700">khao-sat-tn.jpg</p>
+                  <p class="text-xs text-gray-400">1.2 MB</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- ANNOTATION: Action buttons — Approve sends email immediately.
+               Reject opens modal for reason input before sending rejection email. -->
+          <div class="flex gap-3">
+            <button onclick="approveSubmission()" class="flex-1 h-11 bg-green-600 text-white font-medium text-sm rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+              Duyệt
+            </button>
+            <button onclick="showRejectModal()" class="flex-1 h-11 bg-white text-red-600 font-medium text-sm rounded-lg border border-red-200 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+              Từ chối
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOTATION: Reject modal — Overlay with textarea for rejection reason.
+         Required field to ensure admin provides feedback to student. -->
+    <div id="rejectModal" class="hidden fixed inset-0 z-[60] bg-black/40 flex items-center justify-center px-4" onclick="closeRejectModal(event)">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6" onclick="event.stopPropagation()">
+        <h3 class="text-base font-semibold text-gray-900 mb-1">Từ chối đăng ký</h3>
+        <p class="text-sm text-gray-500 mb-4">Vui lòng nhập lý do từ chối. Nội dung này sẽ được gửi qua email cho sinh viên.</p>
+
+        <textarea id="rejectReason" rows="4" required placeholder="Nhập lý do từ chối..."
+          class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"></textarea>
+
+        <div class="flex gap-3 mt-4">
+          <button onclick="closeRejectModal()" class="flex-1 h-10 bg-white text-gray-600 font-medium text-sm rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            Hủy
+          </button>
+          <button onclick="confirmReject()" class="flex-1 h-10 bg-red-600 text-white font-medium text-sm rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+            Xác nhận từ chối
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function switchTab(tab) {
+      const certTab = document.getElementById('tabCert');
+      const gradTab = document.getElementById('tabGrad');
+      const certTable = document.getElementById('tableCert');
+      const gradTable = document.getElementById('tableGrad');
+
+      if (tab === 'cert') {
+        certTab.className = certTab.className.replace('tab-inactive', 'tab-active');
+        gradTab.className = gradTab.className.replace('tab-active', 'tab-inactive');
+        certTable.classList.remove('hidden');
+        gradTable.classList.add('hidden');
+      } else {
+        gradTab.className = gradTab.className.replace('tab-inactive', 'tab-active');
+        certTab.className = certTab.className.replace('tab-active', 'tab-inactive');
+        gradTable.classList.remove('hidden');
+        certTable.classList.add('hidden');
+      }
+    }
+
+    function showDetail(type) {
+      document.getElementById('detailPanel').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail(e) {
+      if (!e || e.target === e.currentTarget) {
+        document.getElementById('detailPanel').classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function showRejectModal() {
+      document.getElementById('rejectModal').classList.remove('hidden');
+    }
+
+    function closeRejectModal(e) {
+      if (!e || e.target === e.currentTarget) {
+        document.getElementById('rejectModal').classList.add('hidden');
+        document.getElementById('rejectReason').value = '';
+      }
+    }
+
+    function approveSubmission() {
+      alert('Đã duyệt! Email xác nhận sẽ được gửi cho sinh viên.');
+      closeDetail();
+    }
+
+    function confirmReject() {
+      const reason = document.getElementById('rejectReason').value.trim();
+      if (!reason) { document.getElementById('rejectReason').focus(); return; }
+      alert('Đã từ chối! Email thông báo sẽ được gửi cho sinh viên.\nLý do: ' + reason);
+      closeRejectModal();
+      closeDetail();
+    }
+  </script>
+
+</body>
+</html>

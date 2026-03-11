@@ -84,3 +84,5 @@ external/
 
 # Git worktrees (local development only)
 worktrees/
+
+/src/generated/prisma
