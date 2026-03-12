@@ -185,10 +185,10 @@ export function AdminDashboardClient({ certificates, applications, feedbacks }: 
 
       {/* Tabs */}
       <Tabs defaultValue="certificate">
-        <TabsList>
-          <TabsTrigger value="certificate">Đăng ký nhận bằng</TabsTrigger>
-          <TabsTrigger value="application">Hồ sơ xét TN</TabsTrigger>
-          <TabsTrigger value="feedback">Đánh giá ({feedbacks.length})</TabsTrigger>
+        <TabsList className="h-10 bg-neutral-200 p-1 rounded-lg">
+          <TabsTrigger value="certificate" className="px-4 py-2 text-sm">Đăng ký nhận bằng</TabsTrigger>
+          <TabsTrigger value="application" className="px-4 py-2 text-sm">Hồ sơ xét TN</TabsTrigger>
+          <TabsTrigger value="feedback" className="px-4 py-2 text-sm">Đánh giá ({feedbacks.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="certificate">
