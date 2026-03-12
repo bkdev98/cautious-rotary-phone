@@ -1,7 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 
 export function FeedbackFab() {
+  const pathname = usePathname();
+
+  // Hide on admin and feedback pages
+  if (pathname.startsWith("/admin") || pathname.startsWith("/danh-gia")) {
+    return null;
+  }
+
   return (
     <Link
       href="/danh-gia"

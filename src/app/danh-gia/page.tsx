@@ -68,13 +68,13 @@ export default function FeedbackPage() {
       <PageHeader />
 
       <main className="max-w-xl mx-auto px-4 py-8">
-        <Link
-          href="/"
+        <button
+          onClick={() => window.history.back()}
           className="inline-flex items-center gap-1 text-sm text-[#0066CC] hover:underline mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Quay lại
-        </Link>
+        </button>
 
         <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
           <h2 className="text-xl font-bold text-[#003399] mb-6">
