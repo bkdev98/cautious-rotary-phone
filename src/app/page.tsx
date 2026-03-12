@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, FileText } from "lucide-react";
+import { GraduationCap, FileText, Star } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 
 export default function LandingPage() {
@@ -12,7 +12,7 @@ export default function LandingPage() {
           Hệ thống quản lý hồ sơ tốt nghiệp
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-3">
           <Link
             href="/dang-ky-nhan-bang"
             className="group bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 p-8 text-center"
@@ -40,6 +40,21 @@ export default function LandingPage() {
             </h3>
             <p className="text-sm text-neutral-500">
               Nộp hồ sơ xét tốt nghiệp trực tuyến
+            </p>
+          </Link>
+
+          <Link
+            href="/danh-gia"
+            className="group bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 p-8 text-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-100 transition-colors">
+              <Star className="h-8 w-8 text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#003399] mb-2">
+              Đánh giá dịch vụ
+            </h3>
+            <p className="text-sm text-neutral-500">
+              Đánh giá chất lượng dịch vụ của khoa
             </p>
           </Link>
         </div>

@@ -55,9 +55,19 @@ interface ApplicationRecord {
   createdAt: string;
 }
 
+interface FeedbackRecord {
+  id: string;
+  fullName: string;
+  studentId: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+}
+
 interface Props {
   certificates: CertificateRecord[];
   applications: ApplicationRecord[];
+  feedbacks: FeedbackRecord[];
 }
 
 const STATUS_BADGES: Record<Status, { label: string; className: string }> = {
@@ -73,7 +83,7 @@ const STATUS_FILTERS: { value: Status | "ALL"; label: string }[] = [
   { value: "REJECTED", label: "Từ chối" },
 ];
 
-export function AdminDashboardClient({ certificates, applications }: Props) {
+export function AdminDashboardClient({ certificates, applications, feedbacks }: Props) {
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<Status | "ALL">("ALL");
   const [selectedCert, setSelectedCert] = useState<CertificateRecord | null>(null);
@@ -132,9 +142,15 @@ export function AdminDashboardClient({ certificates, applications }: Props) {
   return (
     <div>
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <StatCard label="Đăng ký nhận bằng" value={certificates.length} />
         <StatCard label="Hồ sơ xét TN" value={applications.length} />
+        <StatCard
+          label="Đánh giá TB"
+          value={feedbacks.length > 0
+            ? Math.round((feedbacks.reduce((s, f) => s + f.rating, 0) / feedbacks.length) * 10) / 10
+            : 0}
+        />
         <StatCard
           label="Chờ duyệt"
           value={
@@ -172,6 +188,7 @@ export function AdminDashboardClient({ certificates, applications }: Props) {
         <TabsList>
           <TabsTrigger value="certificate">Đăng ký nhận bằng</TabsTrigger>
           <TabsTrigger value="application">Hồ sơ xét TN</TabsTrigger>
+          <TabsTrigger value="feedback">Đánh giá ({feedbacks.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="certificate">
@@ -250,6 +267,40 @@ export function AdminDashboardClient({ certificates, applications }: Props) {
                   <TableRow>
                     <TableCell colSpan={5} className="text-center text-neutral-400 py-8">
                       Không có dữ liệu
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="feedback">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Họ tên</TableHead>
+                  <TableHead>MSSV</TableHead>
+                  <TableHead>Đánh giá</TableHead>
+                  <TableHead>Nhận xét</TableHead>
+                  <TableHead>Ngày gửi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {feedbacks.map((fb) => (
+                  <TableRow key={fb.id}>
+                    <TableCell className="font-medium">{fb.fullName}</TableCell>
+                    <TableCell>{fb.studentId}</TableCell>
+                    <TableCell>{"★".repeat(fb.rating)}{"☆".repeat(5 - fb.rating)}</TableCell>
+                    <TableCell className="max-w-xs truncate">{fb.comment || "—"}</TableCell>
+                    <TableCell>{formatDate(fb.createdAt)}</TableCell>
+                  </TableRow>
+                ))}
+                {feedbacks.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-neutral-400 py-8">
+                      Chưa có đánh giá
                     </TableCell>
                   </TableRow>
                 )}

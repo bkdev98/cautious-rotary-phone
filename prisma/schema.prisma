@@ -125,3 +125,16 @@ model GraduationApplication {
   @@index([status, createdAt])
   @@map("graduation_application")
 }
+
+// Form 3: Đánh giá / Feedback
+model Feedback {
+  id        String   @id @default(cuid())
+  fullName  String
+  studentId String
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("feedback")
+}
