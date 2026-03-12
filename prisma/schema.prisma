@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,123 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// Better Auth tables
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// Application models
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Form 1: Đăng ký nhận bằng tốt nghiệp
+model CertificateRegistration {
+  id              String           @id @default(cuid())
+  fullName        String
+  studentId       String
+  className       String
+  phone           String
+  email           String
+  graduationBatch String
+  receiveDate     DateTime
+  session         String           // "sang" | "chieu"
+  surveyImageUrl  String           // R2 object key
+  status          SubmissionStatus @default(PENDING)
+  adminNote       String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([status, createdAt])
+  @@map("certificate_registration")
+}
+
+// Form 2: Hồ sơ xét tốt nghiệp
+model GraduationApplication {
+  id                    String           @id @default(cuid())
+  fullName              String
+  studentId             String
+  className             String
+  phone                 String
+  email                 String
+  isOverdue             Boolean          @default(false)
+
+  // 6 required uploads (R2 object keys)
+  applicationFormUrl    String           // Đơn xét tốt nghiệp (Word)
+  birthCertificateUrl   String           // Bản sao khai sinh
+  foreignLanguageCertUrl String          // Chứng chỉ ngoại ngữ
+  itCertUrl             String           // Chứng chỉ tin học
+  itCertReceiptUrl      String           // Biên nhận nộp CC tin học
+  foreignLangReceiptUrl String           // Biên nhận nộp CC ngoại ngữ
+
+  // 2 conditional uploads (required if isOverdue = true)
+  transcriptUrl         String?          // Bảng điểm (quá hạn)
+  overdueReasonFormUrl  String?          // Đơn trình bày lý do (quá hạn)
+
+  status                SubmissionStatus @default(PENDING)
+  adminNote             String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  @@index([status, createdAt])
+  @@map("graduation_application")
 }
