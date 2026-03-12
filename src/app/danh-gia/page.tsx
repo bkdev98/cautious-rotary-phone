@@ -78,7 +78,7 @@ export default function FeedbackPage() {
 
         <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
           <h2 className="text-xl font-bold text-[#003399] mb-6">
-            Đánh giá dịch vụ
+            Góp ý hệ thống
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">

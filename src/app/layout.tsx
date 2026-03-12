@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { Toaster } from "sonner";
+import { FeedbackFab } from "@/components/layout/feedback-fab";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="vi">
       <body className={`${beVietnamPro.variable} antialiased`}>
         {children}
+        <FeedbackFab />
         <Toaster richColors position="top-right" />
       </body>
     </html>
